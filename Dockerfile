@@ -9,3 +9,7 @@ RUN mvn install -DskipTests
 WORKDIR cd /target
 ADD target/sca-eureka-service-0.0.1-SNAPSHOT.jar app.jar
 CMD [ "sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -Djava.security.egd=file:/dev/./urandom -jar app.jar" ]
+EXPOSE 8761
+
+#docker build -t eureka-web:v1 .
+#docker run -p 8761:8761 -e "SPRING_PROFILES_ACTIVE=test" eureka-web:v1
