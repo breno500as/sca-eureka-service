@@ -1,15 +1,26 @@
-FROM alpine/git as clone
+#
+# Download stage
+#
+FROM alpine/git as git
 WORKDIR /app
 RUN git clone https://github.com/breno500as/sca-eureka-service.git
 
-FROM maven:3.5-jdk-8-alpine as build
-WORKDIR /app
-COPY --from=clone /app/sca-eureka-service /app
-RUN mvn install -DskipTests
-WORKDIR cd /target
-ADD target/sca-eureka-service-0.0.1-SNAPSHOT.jar app.jar
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Dspring.profiles.active=$SPRING_PROFILES_ACTIVE -Djava.security.egd=file:/dev/./urandom -jar app.jar" ]
-EXPOSE 8761
+#
+# Build stage
+#
+FROM maven:3.5-jdk-8-alpine as builder
+RUN mkdir /build
+COPY --from=git /app/sca-eureka-service /build
+WORKDIR /build
+RUN mvn clean dependency:resolve dependency:resolve-plugins package spring-boot:repackage -DskipTests 
+ 
+#
+# Package stage
+#
+FROM openjdk:8-jdk-alpine as runtime
+RUN mkdir /app
+COPY --from=builder /build/target/*.jar app.jar
+ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar app.jar" ] 
 
-#docker build -t eureka-web:v1 .
-#docker run -p 8761:8761 -e "SPRING_PROFILES_ACTIVE=test" eureka-web:v1
+# docker build -t sca-eureka:v1 .
+# docker run -
