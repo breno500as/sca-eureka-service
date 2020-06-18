@@ -20,7 +20,7 @@
 	</properties>
 	
 	<build>
-	    <finalName>sca-crud</finalName>
+	    <finalName>sca-eureka-service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
