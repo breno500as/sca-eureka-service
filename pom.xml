@@ -19,6 +19,19 @@
 		<spring-cloud.version>Hoxton.SR4</spring-cloud.version>
 	</properties>
 	
+	<build>
+	    <finalName>sca-crud</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<classifier>exec</classifier>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	
 	 <profiles>
 		<profile>
 			<id>dev</id>
