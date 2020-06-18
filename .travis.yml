@@ -6,7 +6,7 @@ cache:
   - "$HOME/.cache"
 script:
   - mvn clean -DskipTests package
-  - docker build sca-eureka-service .
+  - docker build -t sca-eureka-service .
 install: skip
 before_deploy:
   # install heroku CLI
