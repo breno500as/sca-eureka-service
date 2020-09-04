@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: sca-eureka
+  labels: 
+    app: sca-eureka
+spec:
+  containers:
+    - name: sca-eureka
+      image: breno500as/sca-eureka-service:123
+      ports:
+       - containerPort: 8761
+      livenessProbe: #Configuração do health check
+          httpGet:
+            path: /
+            port: sca-eureka
+          initialDelaySeconds: 15 #delay de 15 segundos antes de iniciar o health check
+          timeoutSeconds: 30
