@@ -1,0 +1,19 @@
+#escalabilidade-horizontal no kubernetes
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: sca-eureka-controller
+spec: #especificação do replication controller
+  replicas: 2 #vai criar 2 replicas
+  selector: 
+    app: sca-eureka-controller
+  template: #template para configuração do pod
+    metadata: 
+     labels: 
+       app: sca-eureka-controller
+    spec: #especificação do pod
+      containers:
+      - name: sca-eureka-controller
+        image: breno500as/sca-eureka-service:123
+        ports:
+          - containerPort: 8761
