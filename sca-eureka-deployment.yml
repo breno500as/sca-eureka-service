@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-sca-eureka
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: sca-eureka-deployment
+  template:
+    metadata:
+      labels:
+        app: sca-eureka-deployment
+    spec:
+      containers:
+       - name: sca-eureka
+         image: breno500as/sca-eureka-service:v3
+         ports:
+         - name: sca-eureka-port
+           containerPort: 8761
+         livenessProbe: #Configuração do health check
+           httpGet:
+             path: /
+             port: sca-eureka-port
+           initialDelaySeconds: 100 #delay de 5 segundos antes de iniciar o health check
+           timeoutSeconds: 100
+           periodSeconds: 10 #período de 10 segundos para cada rechecagem de saúde
+         readinessProbe: #Configuração do health check
+             httpGet:
+               path: /
+               port: sca-eureka-port
+             initialDelaySeconds: 100 #delay de 5 segundos antes de iniciar o health check
+             timeoutSeconds: 10
+             periodSeconds: 10
+         volumeMounts: 
+            - name: credvolume
+              mountPath: /etc/creds
+              readOnly: true
+      volumes:
+         - name: credvolume
+           secret: 
+             secretName: db-secrets # necessário adicionar o db-secrets ao kubernetes utilizando o comando crete: kubectl create -f sca-eureka-secrets.yml
+                                    # ao criar o deployment  recupera o db-secrets criado no comando anterior (pelo arquivo secrets.yml) e cria 4 arquivos (username, password, rootPassword, database) no diretório
+                                    # especificado no atributo mountPath (/etc/creds), esses arquivos podem ser lidos pela aplicação e por se tratarem de volumes não são perdidos quando o container é destruído
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sca-eureka-service
+spec:
+  ports:
+  - port: 31001
+    nodePort: 31001
+    targetPort: sca-eureka-port
+    protocol: TCP
+  selector:  #service para o pod com o label app helloworld
+    app: sca-eureka-deployment #service para o pod com o label app helloworld
+  type: NodePort
