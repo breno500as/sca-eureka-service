@@ -2,8 +2,8 @@ package com.puc.sca.eureka.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-//import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-//import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer;
 
 /**
  * Aplicação que orquestra e monitora os microserviços.
@@ -12,8 +12,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
-//@EnableEurekaServer
-//@EnableDiscoveryClient(autoRegister = false)
+@EnableEurekaServer
+@EnableDiscoveryClient(autoRegister = false)
 public class ScaEurekaServiceApplication {
 
 	public static void main(String[] args) {
